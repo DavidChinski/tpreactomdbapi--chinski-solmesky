@@ -107,8 +107,8 @@ const App = () => {
 
             {movieData.Ratings && movieData.Ratings.length > 0 && (
               <View style={{ marginTop: 16, width: "100%" }}>
-                {movieData.Ratings.map((rating, index) => (
-                  <Text key={index} style={styles.ratingText}>
+                {movieData.Ratings.map((rating) => (
+                  <Text key={rating.Source} style={styles.ratingText}>
                     {rating.Source}: {rating.Value}
                   </Text>
                 ))}
