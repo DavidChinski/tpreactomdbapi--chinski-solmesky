@@ -10,6 +10,7 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 
 import axios from "axios";
@@ -48,7 +49,7 @@ const App = () => {
       await sleep(3000);
 
       console.log("Status:", response.status);
-      // En response.data se encuentra la respuesta! 
+      // En response.data se encuentra la respuesta!
       if (response.data.Response === "True") {
         setMovieData(response.data);
       } else {
@@ -74,7 +75,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar/>
+      <StatusBar />
       <Text style={styles.title}>Buscar Película por IMDb ID</Text>
 
       <TextInput
@@ -89,18 +90,33 @@ const App = () => {
         <Text style={styles.buttonText}>Buscar</Text>
       </TouchableOpacity>
 
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      <ScrollView style={styles.container}>
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
 
-      {movieData && (
-        <View style={styles.result}>
-          <Image
-            source={{ uri: movieData.Poster }}
-            style={styles.poster}
-            resizeMode="contain"
-          />
-          <Text style={styles.movieTitle}>{movieData.Title}</Text>
-        </View>
-      )}
+        {movieData && (
+          <View style={styles.result}>
+            <Image
+              source={{ uri: movieData.Poster }}
+              style={styles.poster}
+              resizeMode="contain"
+            />
+            <Text style={styles.movieTitle}>{movieData.Title}</Text>
+            <Text style={styles.movieTitle}>{movieData.Actors}</Text>
+            <Text style={styles.movieTitle}>{movieData.Director}</Text>
+            <Text style={styles.movieTitle}>{movieData.Genre}</Text>
+
+            {movieData.Ratings && movieData.Ratings.length > 0 && (
+              <View style={{ marginTop: 16, width: "100%" }}>
+                {movieData.Ratings.map((rating, index) => (
+                  <Text key={index} style={styles.ratingText}>
+                    {rating.Source}: {rating.Value}
+                  </Text>
+                ))}
+              </View>
+            )}
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -151,6 +167,12 @@ const styles = StyleSheet.create({
   movieTitle: {
     fontSize: 24,
     fontWeight: "600",
+    textAlign: "center",
+  },
+  ratingText: {
+    fontSize: 16,
+    color: "#333",
+    marginVertical: 2,
     textAlign: "center",
   },
 });
